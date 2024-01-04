@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  # Primer contenedor, tiene la APP en python y lo llamamos "todolist"
+  todolist:  
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports: # mapeamos puerto 80 del host a 80 de la imagen
+      - "3000:3000"  
+    environment: # Usamos  variables de entorno para la config de mysql
+      - MYSQL_ROOT_PASSWORD=clave123
+      - MYSQL_DATABASE=todolist
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=clave123
+    depends_on: # Le decime que este contenedor depende de mysql
+      - mysql
+
+  mysql: # El contenedor que tiene mysql
+    image: mysql:5.7 # Nos basamos en esta imagen 5.7 
+    environment:          
+      - MYSQL_ROOT_PASSWORD=clave123
+      - MYSQL_DATABASE=todolist
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=clave123
+    ports:
+      - "3306:3306" # Mapeamos el puerto de mysql del host al del contenedor, por si queremos acceder desde el host.
+    volumes:
+      - mysql_data:/var/lib/mysql  # Montamos en esta carpeta del host los archivos de datos para persistir la info de mysql      
+volumes: # Definimos el volumen que va a usar el contenedor de mysql
+  mysql_data:
