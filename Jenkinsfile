@@ -7,6 +7,17 @@ pipeline {
     }
 
     stages {
+        stage('Lint Dockerfile') {
+            steps {
+                script {
+                    def result = sh(script: "hadolint Dockerfile", returnStatus: true)
+                    if (result != 0) {
+                        error("hadolint failed with exit code ${result}")
+                    }
+                }
+            }
+        }
+
         stage('Build'){
             steps{
                 sh "docker build -t ${env.RepoDockerHub}/${env.NameContainer}:${env.BUILD_NUMBER} ."
