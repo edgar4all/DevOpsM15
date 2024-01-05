@@ -29,7 +29,7 @@ jobs:
       name: Build and push
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:Docker"
+        context: "{{defaultContext}}"
         push: true
         tags: ${{ secrets.DOCKERUSER }}/react-todo-list:${{ github.run_number }}
       
